@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=root  # Altere para uma senha forte
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped  # Opcional, reinicia o phpMyAdmin automaticamente em caso de parada
+    environment:
+      - PMA_HOST=mariadb  # Define o host do MariaDB (nome do serviço)
+      - PMA_USER=root  # Define o usuário do MariaDB
+      - PMA_PASSWORD=root  # Define a senha do MariaDB (a mesma do MariaDB)
+    ports:
+      - "8080:80"  # Mapeia a porta 80 do contêiner para a porta 8080 do hospedeiro
+    depends_on:
+      - mariadb  # Espera o MariaDB iniciar antes de iniciar o phpMyAdmin
+
+volumes:
+  mariadb-data: {}
